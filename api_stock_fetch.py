@@ -1,23 +1,23 @@
-import requests
 import pandas as pd
+import requests
 import time
 
 
-DF1= pd.read_csv("nasdaq_df1.csv")
-url="https://alpha-vantage.p.rapidapi.com/query"
+DF1 = pd.read_csv("nasdaq_df1.csv")
 
+
+Tickers = DF1["Ticker"][:5]  
+
+url = "https://alpha-vantage.p.rapidapi.com/query"
 headers = {
-    "X-RapidAPI-Key": "(own key)",  #  Replace with your own key
+    "X-RapidAPI-Key": "(own key)", #input your own key 
     "X-RapidAPI-Host": "alpha-vantage.p.rapidapi.com"
 }
 
+results = []
 
-results=[] 
-Tickers = DF1["Ticker"]
-
-
-for ticker in Tickers: 
-    try: 
+for ticker in Tickers:
+    try:
         params = {
             "function": "TIME_SERIES_DAILY_ADJUSTED",
             "symbol": ticker,
@@ -26,6 +26,8 @@ for ticker in Tickers:
         }
 
         response = requests.get(url, headers=headers, params=params)
+        print(f" Response {response.status_code} for {ticker}")
+
         data = response.json()
 
         if "Time Series (Daily)" in data:
@@ -56,7 +58,8 @@ if results:
     print(" File saved as nasdaq_df2.csv")
 else:
     print(" No data to save.")
- 
+
+
 
 
         
