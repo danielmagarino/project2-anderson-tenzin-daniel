@@ -28,3 +28,6 @@ if website.status_code==200:
 	DF1=pd.DataFrame(Component_data)
 else:
 	print("Invalid status code")
+
+DF1.to_csv("nasdaq_df1.csv", index=False)
+print(" Saved nasdaq_df1.csv")
