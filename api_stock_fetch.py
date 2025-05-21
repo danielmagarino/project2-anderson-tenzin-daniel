@@ -10,7 +10,7 @@ Tickers = DF1["Ticker"][:5]
 
 url = "https://alpha-vantage.p.rapidapi.com/query"
 headers = {
-    "X-RapidAPI-Key": "ef5a3c33d3msh7776c931f35e89cp18e5ffjsnf36112350622", #input your own key 
+    "X-RapidAPI-Key": "(input your own key)", #input your own key 
     "X-RapidAPI-Host": "alpha-vantage.p.rapidapi.com"
 }
 
