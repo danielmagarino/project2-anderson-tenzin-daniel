@@ -10,7 +10,7 @@ Tickers = DF1["Ticker"][:5]
 
 url = "https://alpha-vantage.p.rapidapi.com/query"
 headers = {
-    "X-RapidAPI-Key": "(own key)", #input your own key 
+    "X-RapidAPI-Key": "ef5a3c33d3msh7776c931f35e89cp18e5ffjsnf36112350622", #input your own key 
     "X-RapidAPI-Host": "alpha-vantage.p.rapidapi.com"
 }
 
@@ -46,6 +46,15 @@ for ticker in Tickers:
 
             print(f" Data collected for {ticker}")
         else:
+            results.append({
+            "Ticker": ticker,
+            "Date": None,
+            "Open": None,
+            "High": None,
+            "Low": None,
+            "Close": None,
+            "Volume": None 
+            })
             print(f" No data for {ticker}")
     except Exception as e:
         print(f" Error with {ticker}: {e}")
@@ -58,6 +67,15 @@ if results:
     print(" File saved as nasdaq_df2.csv")
 else:
     print(" No data to save.")
+
+    print(DF2.dtypes)
+    print(DF2.head())
+
+
+
+DF3 = DF1.merge(DF2, on="Ticker", how="left")
+DF3.to_csv("nasdaq_df3.csv", index=False)
+print("nasdaq_df3.csv file saved")
 
 
 
