@@ -54,25 +54,33 @@ sport_team_urls = {
 
 					}
 
-
+# First Process function. Used for the Mens Volleyball list of URLS
 def process_data_1(urls):
 
+	# Lists to store names and heights
 	names = []
 	heights = []
 
+	# Loop through each URL
 	for url in urls:
 		page = requests.get(url)
 
+		# Proceeds if the page loads successfully
 		if page.status_code == 200:
 
+			# Parses the HTML
 			soup = BeautifulSoup(page.content,'html.parser')
 
+			# Find all height and name elements
+			# Info is under 'td' tags
 			height_tags = soup.find_all('td', class_='height')
 			name_tags = soup.find_all('td', class_='sidearm-table-player-name')
 
+			# Extract and store player names
 			for name_tag in name_tags:
 				names.append(name_tag.get_text().strip())
 
+			# Extract and convert height to inches
 			for height_tag in height_tags:
 				raw_height = height_tag.get_text()
 
@@ -82,34 +90,43 @@ def process_data_1(urls):
 				height_in_inches = feet + inches
 				heights.append(height_in_inches)
 
+	# Create a DataFrame from our collected data
 	data = {
 				'Name' : names,
 				'Height' : heights
 			}
 
 	df = pd.DataFrame(data)
+
+	# Calculates the average height
 	avg_height = sum(heights) / len(heights)
 
 	return df, avg_height
 
 
-
+# Second Process function. Used for all other lists of URLS
 def process_data_2(urls):
 
+	# Lists to store names and heights
 	names = []
 	heights = []
 
+	# Loop through each URL
 	for url in urls:
 		page = requests.get(url)
 
+		# Proceeds if the page loads successfully
 		if page.status_code == 200:
 
+			# Parses the HTML
 			soup = BeautifulSoup(page.content,'html.parser')
 
+			# Finding height and name elements using .select() rather than .find_all()
+			# Different tags from previous process function
 			height_tags = soup.select("span.sidearm-roster-player-height")
 			name_tags = soup.select("div.sidearm-roster-player-name a")
 
-
+			# Extracts names and converts height to inches
 			for name_tag, height_tag in zip(name_tags, height_tags):
 				names.append(name_tag.get_text().strip())
 
@@ -121,7 +138,7 @@ def process_data_2(urls):
 				height_in_inches = feet + inches
 				heights.append(height_in_inches)
 
-
+				# Create a DataFrame from the collected data
 	data = {
 				'Name' : names,
 				'Height' : heights
@@ -129,11 +146,13 @@ def process_data_2(urls):
 
 	df = pd.DataFrame(data)
 
+	# Calculate average height
+	# It also handles cases where the heights list is empty
 	avg_height = sum(heights) / len(heights) if heights else 0
 
 	return df, avg_height
 
-
+# Processes each sport team using appropriate functions, then saves them to a CSV
 mens_volleyball_df, mens_volleyball_avg_height = process_data_1(sport_team_urls['mens_volleyball'])
 mens_volleyball_df.to_csv('mens_volleyball.csv')
 
@@ -143,19 +162,22 @@ womens_volleyball_df.to_csv('womens_volleyball.csv')
 mens_swimming_and_diving_df, mens_swimming_and_diving_avg_height = process_data_2(sport_team_urls['mens_swimming_and_diving'])
 mens_swimming_and_diving_df.to_csv('mens_swimming.csv')
 
-womens_swimming_and_diving_df, womens_swimming_and_diving_avg_height = process_data_2(sport_team_urls['mens_swimming_and_diving'])
+womens_swimming_and_diving_df, womens_swimming_and_diving_avg_height = process_data_2(sport_team_urls['womens_swimming_and_diving'])
 womens_swimming_and_diving_df.to_csv('womens_swimming.csv')
 
+# Function to get shortest and tallest players
 def get_top_bottom(df):
 	shortest = df.nsmallest(5, 'Height')
 	tallest = df.nlargest(5, 'Height')
 	return shortest, tallest
 
+# Gets top and bottom heights of each player
 shortest_men_volleyball, tallest_men_volleyball = get_top_bottom(mens_volleyball_df)
 shortest_women_volleyball, tallest_women_volleyball = get_top_bottom(womens_volleyball_df)
 shortest_men_swimming, tallest_men_swimming = get_top_bottom(mens_swimming_and_diving_df)
 shortest_women_swimming, tallest_women_swimming = get_top_bottom(womens_swimming_and_diving_df)
 
+# Prints results
 print("Top 5 Tallest Men's Volleyball Players:\n", tallest_men_volleyball, "\n")
 print("Top 5 Shortest Men's Volleyball Players:\n", shortest_men_volleyball, "\n")
 
