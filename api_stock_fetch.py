@@ -76,9 +76,4 @@ else:
 DF3 = DF1.merge(DF2, on="Ticker", how="left")
 DF3.to_csv("nasdaq_df3.csv", index=False)
 print("nasdaq_df3.csv file saved")
-
-
-
-
-        
-     
+print(DF3.describe())
