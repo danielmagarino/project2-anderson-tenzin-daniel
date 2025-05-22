@@ -143,7 +143,7 @@ womens_volleyball_df.to_csv('womens_volleyball.csv')
 mens_swimming_and_diving_df, mens_swimming_and_diving_avg_height = process_data_2(sport_team_urls['mens_swimming_and_diving'])
 mens_swimming_and_diving_df.to_csv('mens_swimming.csv')
 
-womens_swimming_and_diving_df, womens_swimming_and_diving_avg_height = process_data_2(sport_team_urls['mens_swimming_and_diving'])
+womens_swimming_and_diving_df, womens_swimming_and_diving_avg_height = process_data_2(sport_team_urls['womens_swimming_and_diving'])
 womens_swimming_and_diving_df.to_csv('womens_swimming.csv')
 
 def get_top_bottom(df):
